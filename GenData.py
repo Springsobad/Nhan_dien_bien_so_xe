@@ -33,13 +33,14 @@ def main():
     imgThreshCopy = imgThresh.copy()        # make a copy of the thresh image, this in necessary b/c findContours modifies the image
 
     npaContours, hierarchy = cv2.findContours(imgThreshCopy,        # input image, make sure to use a copy since the function will modify this image in the course of finding contours
-                                                 cv2.RETR_EXTERNAL,                 # retrieve the outermost contours only
-                                                 cv2.CHAIN_APPROX_SIMPLE)           # compress horizontal, vertical, and diagonal segments and leave only their end points
-
+                                                 cv2.RETR_EXTERNAL,
+                                              # retrieve the outermost contours only
+                                                 cv2.CHAIN_APPROX_SIMPLE)          # compress horizontal, vertical, and diagonal segments and leave only their end points
+                                #                Giảm bớt điểm không cần thiết trong contour
                                 # declare empty numpy array, we will use this to write to file later
                                 # zero rows, enough cols to hold all image data
     npaFlattenedImages =  np.empty((0, RESIZED_IMAGE_WIDTH * RESIZED_IMAGE_HEIGHT))
-   
+
 
     intClassifications = []         # declare empty classifications list, this will be our list of how we are classifying our chars from user input, we will write to file at the end
 
@@ -49,6 +50,7 @@ def main():
                      ord('K'), ord('L'), ord('M'), ord('N'), ord('O'), ord('P'), ord('Q'), ord('R'), ord('S'), ord('T'),
                      ord('U'), ord('V'), ord('W'), ord('X'), ord('Y'), ord('Z')] #Là mã ascii của mấy chữ này
 
+    # Xác định vùng chứa ký tự: Vẽ hình chữ nhật xung quanh ký tự.
     for npaContour in npaContours:                          # for each contour
         if cv2.contourArea(npaContour) > MIN_CONTOUR_AREA:          # if contour is big enough to consider
             [intX, intY, intW, intH] = cv2.boundingRect(npaContour)         # get and break out bounding rect
